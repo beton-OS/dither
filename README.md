@@ -2,7 +2,7 @@
 A small python script to dither an image.\
 An adapted copy of mies47 version (https://github.com/mies47/MM-ordered_dithering)
 
-Fist pip the avif extension\
+Fist pip install the avif extension:\
 `pip install pillow pillow-avif-plugin --upgrade`
 
 Usage:\
