@@ -1,3 +1,4 @@
+import pillow_avif 
 from PIL import Image
 import numpy as np
 import sys
@@ -35,7 +36,7 @@ def ordered_dithering(img_pixel:np.array, dither_m:np.array):
             else:
                 img_pixel[y][x] = 0
 
-    Image.fromarray(img_pixel).convert('L').save(name+'_dithered.png', bit=1)
+    Image.fromarray(img_pixel).convert('L').save(name+'_dithered.avif', quality=70)
 
 if __name__ == '__main__':
     n = 8
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     dm = dither_matrix(n)
     img = get_image(src)
     ordered_dithering(img, dm)
-    print('Dithering is done \U0001F388')
+    print('Dithering is done!')
 
     
 
