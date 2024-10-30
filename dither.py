@@ -1,8 +1,9 @@
-import pillow_avif 
 from PIL import Image
 import numpy as np
-import sys
 import os
+import argparse
+
+
 
 def dither_matrix(n:int):
     if n == 1:
@@ -17,11 +18,11 @@ def dither_matrix(n:int):
         return (1/n**2) * np.concatenate((first_col, second_col), axis=1)
 
 def get_image(src:str):
-    img = np.array(Image.open(src))
-    img_arr = [[(j[0] * 299/1000) + (j[1] * 587/1000) + (j[2] * 114/1000) for j in r] for r in img]
-    img_gray = np.array(img_arr)
-    Image.fromarray(img_gray).convert('L')
-    return img_gray * (1/255)
+    img = Image.open(src)
+    img.thumbnail(size)  # Resize the image
+    img_gray = img.convert('L')  # Convert the image to grayscale
+    img_arr = np.array(img_gray)  # Convert the image to a numpy array
+    return img_arr * (1/255.0)  # Normalize the pixel values
 
 def ordered_dithering(img_pixel:np.array, dither_m:np.array):
     n = np.size(dither_m, axis=0)
@@ -36,16 +37,24 @@ def ordered_dithering(img_pixel:np.array, dither_m:np.array):
             else:
                 img_pixel[y][x] = 0
 
-    Image.fromarray(img_pixel).convert('L').save(name+'_dithered.avif', quality=70)
+    Image.fromarray(img_pixel).convert('L').save(name+'_dithered.png', quality=70)
 
 if __name__ == '__main__':
-    n = 8
-    src = sys.argv[1]
-    name = os.path.splitext(src)[0]
-    dm = dither_matrix(n)
-    img = get_image(src)
-    ordered_dithering(img, dm)
-    print('Dithering is done!')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--nMatrix", dest = "n", default = 8, type = int, help = "diethering matrix dimention") 
+    parser.add_argument("-i", "--input", dest = "src", type = str, help = "image file name")
+    parser.add_argument("-s", "--size", dest = "edge", default = 800, type = int, help = "resizing value")
+    args = parser.parse_args()
 
-    
+    n = args.n  # Use the value of n from the command line argument 
+    src = args.src  # Use the value of src from the command line argument
+    edge = args.edge # Use the value of edge from cla
+    name = os.path.splitext(src)[0] # Get the name only, drop the extension
+    size = (edge, edge) # Get the risizing dimensions
+    img = get_image(src)
+    dm = dither_matrix(n)
+    ordered_dithering(img, dm)
+    print('Dithering is done \U0001F388')
+
+
 
