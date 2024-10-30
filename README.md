@@ -1,6 +1,6 @@
 # dither
 A small python script to dither an image.\
-An adapted copy of mies47 version (https://github.com/mies47/MM-ordered_dithering), 
+An adapted version of mies47's (https://github.com/mies47/MM-ordered_dithering),\ 
 that also resizes the picture while maintaining its ratio.
 
 Usage:\
